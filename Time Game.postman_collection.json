@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "010640d1-9438-4045-b947-b813ab1b3172",
+		"name": "Time Game",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46226344",
+		"_collection_link": "https://marcoromero-9880743.postman.co/workspace/time-game~0ba9784f-d844-4f29-a170-1f3a87aa94d9/collection/46226344-010640d1-9438-4045-b947-b813ab1b3172?action=share&source=collection_link&creator=46226344"
+	},
+	"item": [
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.eql(201);",
+							"});",
+							"",
+							"pm.test(\"Response has username and id\", function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json).to.have.property(\"username\");",
+							"    pm.expect(json).to.have.property(\"id\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"ramses5\",\n  \"email\": \"ramses5@example.com\",\n  \"password\": \"ramses5\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const data = pm.response.json();",
+							"pm.environment.set(\"token\", data.access_token); // guarda el token",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ token }}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"ramses1@example.com\",\n  \"password\": \"ramses1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/auth/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status is 201\", () => {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const data = pm.response.json();",
+							"pm.test(\"Response has session id\", () => {",
+							"    pm.expect(data).to.have.property(\"id\");",
+							"});",
+							"",
+							"// guardamos el session_id para usarlo en stop session",
+							"pm.environment.set(\"session_id\", data.id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/games/start",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"games",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stop",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const data = pm.response.json();",
+							"pm.test(\"Session status is COMPLETED\", () => {",
+							"    pm.expect(data.status).to.eql(\"COMPLETED\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/games/{{session_id}}/stop",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"games",
+						"{{session_id}}",
+						"stop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Leaderboard",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const data = pm.response.json();",
+							"",
+							"pm.test(\"Response is an array\", () => {",
+							"    pm.expect(data).to.be.an(\"array\");",
+							"});",
+							"",
+							"pm.test(\"Each item has username and score\", () => {",
+							"    if (data.length > 0) {",
+							"        data.forEach(entry => {",
+							"            pm.expect(entry).to.have.property(\"username\");",
+							"            pm.expect(entry).to.have.property(\"total_games\");",
+							"            pm.expect(entry).to.have.property(\"average_deviation\");",
+							"            pm.expect(entry).to.have.property(\"best_deviation\");",
+							"        });",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/leaderboard",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"leaderboard"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+venv/
+tests/__pycache__/
+.pytest_cache/
+*.code-workspace
+*.postman_collection.json
