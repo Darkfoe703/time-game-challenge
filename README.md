@@ -148,6 +148,13 @@ PYTHONPATH=./ pytest -s
 
 ---
 
+## Deploy
+
+Tu app está en producción:
+
+[Ver API en producción](https://time-game-challenge-production.up.railway.app/docs)
+
+
 ## Autor
 
 Marco Romero  
